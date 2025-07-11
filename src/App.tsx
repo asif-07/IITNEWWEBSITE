@@ -235,18 +235,10 @@ const HeroSection = ({ supabaseClient }) => {
             
             <motion.div id="form" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }} className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-blue-500/30 shadow-2xl shadow-blue-900/20">
               {status === 'success' ? (
-                <div className="text-center">
+                <div className="text-center py-12">
                   <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-4" />
                   <h2 className="text-2xl font-bold text-white mb-4">Thank You!</h2>
-                  <p className="text-blue-200 mb-6">Your submission was successful. Click below to get the brochure.</p>
-                  <a 
-                    href="https://xhrdzvnnztpppsjlcwlt.supabase.co/storage/v1/object/public/files/IIT%20Madras%20Prompt%20Engineering%20Brochure%20.pdf" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="w-full inline-block bg-[#00DB77] text-gray-900 font-bold py-3 px-6 rounded-lg hover:bg-white transition-all duration-300 transform hover:scale-105 text-lg"
-                  >
-                    Download Brochure
-                  </a>
+                  <p className="text-blue-200 mb-6">Your submission was successful. The brochure will be sent to your email shortly.</p>
                 </div>
               ) : (
                 <>
@@ -505,9 +497,8 @@ const CertificateSection = () => (
                 <div>
                     <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Get Certified by <span className="text-[#F2C94C]">IIT Madras Pravartak</span></h2>
                     <p className="text-lg text-blue-200 mb-8">Receive proof of your AI mastery, issued from a government-recognized innovation hub, boosting your career profile.</p>
-                    <div className="flex items-center space-x-6">
-                        <img src="https://i.imgur.com/uF2o05i.png" alt="IIT Madras Pravartak Logo" className="h-16 w-auto bg-white p-2 rounded-md" />
-                        <EdaptLogo />
+                    <div className="flex items-center space-x-4">
+                       <h3 className="text-xl font-bold text-white">IITM Pravartak <span className="text-[#F2C94C]">X</span> edapt</h3>
                     </div>
                 </div>
                 <div className="transform hover:scale-105 transition-transform duration-500">
