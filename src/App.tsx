@@ -160,7 +160,7 @@ const HeroSection = ({ supabaseClient }) => {
 
     const handleInputChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     
-    const handleApplyNow = async () => {
+    const handleApplyNow = () => {
         if (!supabaseClient) {
             console.error("Supabase client not initialized.");
             setStatus('error');
@@ -173,8 +173,12 @@ const HeroSection = ({ supabaseClient }) => {
             setTimeout(() => setStatus('idle'), 2000);
             return;
         }
-        setStatus('submitting');
-        const { error } = await supabaseClient
+        
+        // Optimistic UI update
+        setStatus('success');
+
+        // Send data to Supabase in the background
+        supabaseClient
             .from('Form')
             .insert([
                 { 
@@ -184,15 +188,15 @@ const HeroSection = ({ supabaseClient }) => {
                     highest_education: formData.education,
                     current_profile: formData.profile
                 }
-            ]);
-
-        if (error) {
-            console.error('Error inserting data:', error);
-            setStatus('error');
-            setTimeout(() => setStatus('idle'), 3000);
-        } else {
-            setStatus('success');
-        }
+            ])
+            .then(({ error }) => {
+                if (error) {
+                    console.error('Background Supabase Error:', error);
+                    // Optionally handle the background error, e.g., by logging it to a monitoring service
+                } else {
+                    console.log('Form data saved successfully.');
+                }
+            });
     };
 
     const getButtonText = () => {
