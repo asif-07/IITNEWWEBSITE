@@ -160,7 +160,7 @@ const HeroSection = ({ supabaseClient }) => {
 
     const handleInputChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     
-    const handleApplyNow = () => {
+    const handleApplyNow = async () => {
         if (!supabaseClient) {
             console.error("Supabase client not initialized.");
             setStatus('error');
@@ -173,12 +173,10 @@ const HeroSection = ({ supabaseClient }) => {
             setTimeout(() => setStatus('idle'), 2000);
             return;
         }
+        setStatus('submitting');
         
-        // Optimistic UI update
-        setStatus('success');
-
-        // Send data to Supabase in the background
-        supabaseClient
+        // Send data to Supabase
+        const { error } = await supabaseClient
             .from('Form')
             .insert([
                 { 
@@ -188,15 +186,16 @@ const HeroSection = ({ supabaseClient }) => {
                     highest_education: formData.education,
                     current_profile: formData.profile
                 }
-            ])
-            .then(({ error }) => {
-                if (error) {
-                    console.error('Background Supabase Error:', error);
-                    // Optionally handle the background error, e.g., by logging it to a monitoring service
-                } else {
-                    console.log('Form data saved successfully.');
-                }
-            });
+            ]);
+
+        if (error) {
+            console.error('Error inserting data:', error);
+            setStatus('error');
+            setTimeout(() => setStatus('idle'), 3000);
+        } else {
+            // Show success message immediately
+            setStatus('success');
+        }
     };
 
     const getButtonText = () => {
@@ -242,7 +241,15 @@ const HeroSection = ({ supabaseClient }) => {
                 <div className="text-center py-12">
                   <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-4" />
                   <h2 className="text-2xl font-bold text-white mb-4">Thank You!</h2>
-                  <p className="text-blue-200 mb-6">Your submission was successful. The brochure will be sent to your email shortly.</p>
+                  <p className="text-blue-200 mb-6">Your submission was successful. Click below to get the brochure.</p>
+                  <a 
+                    href="https://xhrdzvnnztpppsjlcwlt.supabase.co/storage/v1/object/public/files/IIT%20Madras%20Prompt%20Engineering%20Brochure%20.pdf" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-full inline-block bg-[#00DB77] text-gray-900 font-bold py-3 px-6 rounded-lg hover:bg-white transition-all duration-300 transform hover:scale-105 text-lg"
+                  >
+                    Download Brochure
+                  </a>
                 </div>
               ) : (
                 <>
