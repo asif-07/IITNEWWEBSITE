@@ -3,10 +3,6 @@ import { motion, useAnimation, animate } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ChevronDown, Linkedin, Star, BookOpen, UserCheck, Award, Globe, Zap, Phone, Mail, Clock, BarChart2, Users, HelpCircle, Shield, TrendingUp, Briefcase, PlusCircle, Calendar, Coffee, CheckCircle } from 'lucide-react';
 
-// --- Supabase Client Setup (will be initialized in the component) ---
-const supabaseUrl = 'https://xhrdzvnnztpppsjlcwlt.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhocmR6dm5uenRwcHBzamxjd2x0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxNTc3MDIsImV4cCI6MjA2NzczMzcwMn0.fnocxtYoK8mRFrJY8Ep6Hj5m8bENRD73vYgIFtPvoZI';
-
 // --- Helper for Animations ---
 const AnimatedSection = ({ children, className = '' }) => {
   const controls = useAnimation();
@@ -154,57 +150,26 @@ const Header = () => (
   </header>
 );
 
-const HeroSection = ({ supabaseClient }) => {
+const HeroSection = () => {
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', education: 'Graduate', profile: 'Working' });
-    const [status, setStatus] = useState('idle'); // idle, submitting, success, error
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [error, setError] = useState('');
 
     const handleInputChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     
-    const handleApplyNow = async () => {
-        if (!supabaseClient) {
-            console.error("Supabase client not initialized.");
-            setStatus('error');
-            setTimeout(() => setStatus('idle'), 3000);
-            return;
-        }
-
+    const handleApplyNow = () => {
         if (!formData.name || !formData.email || !formData.phone) {
-            setStatus('error');
-            setTimeout(() => setStatus('idle'), 2000);
+            setError('Please fill all required fields.');
+            setTimeout(() => setError(''), 3000);
             return;
         }
-        setStatus('submitting');
         
-        // Send data to Supabase
-        const { error } = await supabaseClient
-            .from('Form')
-            .insert([
-                { 
-                    name: formData.name, 
-                    email: formData.email, 
-                    phone: formData.phone,
-                    highest_education: formData.education,
-                    current_profile: formData.profile
-                }
-            ]);
+        // Optimistic UI update. This makes the form feel instant.
+        setIsSubmitted(true);
 
-        if (error) {
-            console.error('Error inserting data:', error);
-            setStatus('error');
-            setTimeout(() => setStatus('idle'), 3000);
-        } else {
-            // Show success message immediately
-            setStatus('success');
-        }
-    };
-
-    const getButtonText = () => {
-        if (!supabaseClient) return 'Initializing...';
-        switch (status) {
-            case 'submitting': return 'Submitting...';
-            case 'error': return 'Please fill all fields!';
-            default: return 'Apply Now & Get Brochure';
-        }
+        // You could send the data to a backend here if needed.
+        // For this version, we are just showing the success state.
+        console.log("Form data captured (not sent):", formData);
     };
 
     return (
@@ -237,12 +202,12 @@ const HeroSection = ({ supabaseClient }) => {
             </motion.div>
             
             <motion.div id="form" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }} className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-blue-500/30 shadow-2xl shadow-blue-900/20">
-              {status === 'success' ? (
+              {isSubmitted ? (
                 <div className="text-center py-12">
                   <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-4" />
                   <h2 className="text-2xl font-bold text-white mb-4">Thank You!</h2>
                   <p className="text-blue-200 mb-6">Your submission was successful. Click below to get the brochure.</p>
-                  <a 
+                   <a 
                     href="https://xhrdzvnnztpppsjlcwlt.supabase.co/storage/v1/object/public/files/IIT%20Madras%20Prompt%20Engineering%20Brochure%20.pdf" 
                     target="_blank" 
                     rel="noopener noreferrer"
@@ -272,14 +237,11 @@ const HeroSection = ({ supabaseClient }) => {
                     <button 
                         type="button" 
                         onClick={handleApplyNow} 
-                        disabled={!supabaseClient || status === 'submitting'}
                         className={`w-full font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 text-lg ${
-                            status === 'submitting' || !supabaseClient ? 'bg-gray-500 text-white cursor-not-allowed' :
-                            status === 'error' ? 'bg-red-500 text-white' :
-                            'bg-[#00DB77] text-gray-900 hover:bg-white'
+                            error ? 'bg-red-500 text-white' : 'bg-[#00DB77] text-gray-900 hover:bg-white'
                         }`}
                     >
-                      {getButtonText()}
+                      {error ? error : 'Apply Now & Get Brochure'}
                     </button>
                   </div>
                 </>
@@ -597,39 +559,6 @@ const Footer = () => (
 
 
 export default function App() {
-  const [supabaseClient, setSupabaseClient] = useState(null);
-
-  useEffect(() => {
-    const scriptId = 'supabase-js-script';
-    // Prevent adding script if it already exists
-    if (document.getElementById(scriptId)) {
-        if(window.supabase && !supabaseClient) {
-            setSupabaseClient(window.supabase.createClient(supabaseUrl, supabaseAnonKey));
-        }
-        return;
-    }
-
-    const script = document.createElement('script');
-    script.id = scriptId;
-    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-    script.async = true;
-    
-    script.onload = () => {
-      if (window.supabase) {
-        setSupabaseClient(window.supabase.createClient(supabaseUrl, supabaseAnonKey));
-      }
-    };
-
-    document.body.appendChild(script);
-
-    return () => {
-      const existingScript = document.getElementById(scriptId);
-      if (existingScript) {
-        document.body.removeChild(existingScript);
-      }
-    };
-  }, [supabaseClient]);
-
   return (
     <div className="bg-[#0F2C59] font-poppins text-white">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -661,7 +590,7 @@ export default function App() {
       </style>
       <Header />
       <main>
-        <HeroSection supabaseClient={supabaseClient} />
+        <HeroSection />
         <TrustedBySection />
         <ProductivityGapSection />
         <ImpactSection />
