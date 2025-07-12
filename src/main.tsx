@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from './App'; // Your landing page
 import BlogIndexPage from './BlogIndexPage'; // The new blog list page
-import BlogPostPage from './BlogPostPage'; // The new single blog post template
+import BlogPostPage from './BlogPostPage'; // CORRECTED: This now matches your filename
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
