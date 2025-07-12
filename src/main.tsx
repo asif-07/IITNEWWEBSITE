@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import App from './App.tsx'; // Your landing page
-import BlogIndexPage from './BlogIndexPage.tsx'; // The new blog list page
-import BlogPostPage from './BlogPostPage.tsx'; // CORRECTED: Added .tsx extension
+import App from './App.tsx';
+import BlogIndexPage from './BlogIndexPage.tsx';
+import BlogPostPage from './BlogPostPage.tsx';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
