@@ -36,7 +36,7 @@ const itemVariants = {
 };
 
 
-// --- Mock Data from Brochure ---
+// --- Mock Data ---
 const trustedByLogos = [
   { name: "TCS", logo: "https://placehold.co/150x60/FFFFFF/0F2C59?text=TCS" },
   { name: "Aramco", logo: "https://placehold.co/150x60/FFFFFF/0F2C59?text=Aramco" },
@@ -138,7 +138,6 @@ const WhatsAppButton = () => (
     </a>
 );
 
-// --- Page Sections ---
 const Header = () => (
   <header className="fixed top-0 left-0 right-0 z-50 bg-[#0F2C59]/80 backdrop-blur-lg border-b border-blue-800/30">
     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -164,12 +163,7 @@ const HeroSection = () => {
             return;
         }
         
-        // Optimistic UI update. This makes the form feel instant.
         setIsSubmitted(true);
-
-        // You could send the data to a backend here if needed.
-        // For this version, we are just showing the success state.
-        console.log("Form data captured (not sent):", formData);
     };
 
     return (
@@ -563,9 +557,12 @@ export default function App() {
     <div className="bg-[#0F2C59] font-poppins text-white">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
       <style>
         {`
+          .font-poppins {
+            font-family: 'Poppins', sans-serif;
+          }
           @keyframes marquee-rtl {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
