@@ -80,7 +80,7 @@ const tools = [
   "Hugging Face", "Copy.ai", "Gamma", "Lovable",
   "Bolt AI", "Synthesia", "Power BI", "Bubble",
   "Softr", "RunwayML", "Sora", "Ideogram",
-  "ElevenLabs", "Groq", "Midjourney", "Webflow",
+  "ElevenLabs", "Grok", "Midjourney", "Webflow",
 ];
 
 const faqData = [
