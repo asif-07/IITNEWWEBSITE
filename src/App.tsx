@@ -469,7 +469,7 @@ const CertificateSection = () => (
                     </div>
                 </div>
                 <div className="transform hover:scale-105 transition-transform duration-500">
-                    <img src="https://xhrdzvnnztpppsjlcwlt.supabase.co/storage/v1/object/public/files/photo_2025-07-10_21-05-23.jpg" alt="Sample Certificate" className="rounded-lg shadow-2xl shadow-blue-900/50 border-2 border-[#F2C94C]" />
+                    <img src="https://i.postimg.cc/k4G6BXfX/Whats-App-Image-2025-08-17-at-15-53-38-499fd0da.jpg" alt="Sample Certificate" className="rounded-lg shadow-2xl shadow-blue-900/50 border-2 border-[#F2C94C]" />
                 </div>
             </div>
         </div>
